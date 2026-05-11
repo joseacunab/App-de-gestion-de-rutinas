@@ -8,10 +8,13 @@ import '../componentes/modal_nueva_area.dart';
 import '../componentes/tarjeta_resumen_area.dart';
 import '../controladores/controlador_actividades.dart';
 import '../controladores/controlador_areas.dart';
+import '../controladores/controlador_seleccion_temporal.dart';
 import '../controladores/controlador_usuario.dart';
+import '../modelos/modelo_actividad.dart';
 import '../temas/colores_aplicacion.dart';
 import '../temas/estilos_texto_aplicacion.dart';
 import '../utilidades/utilidad_consultas_actividad.dart' as consultas;
+import '../utilidades/utilidad_fecha.dart';
 
 /// Detalle de un área: resumen, lista y CRUD de actividades.
 class PantallaDetalleArea extends StatelessWidget {
@@ -23,6 +26,7 @@ class PantallaDetalleArea extends StatelessWidget {
   Widget build(BuildContext context) {
     final controladorAreas = context.watch<ControladorAreas>();
     final controladorActividades = context.watch<ControladorActividades>();
+    final temporal = context.watch<ControladorSeleccionTemporal>();
     final uid = context.watch<ControladorUsuario>().usuarioAuth?.uid;
 
     final area = controladorAreas.areaPorId(idArea);
@@ -30,7 +34,12 @@ class PantallaDetalleArea extends StatelessWidget {
       return const Scaffold(body: Center(child: Text('Área no encontrada')));
     }
 
-    final actividades = consultas.actividadesPorArea(controladorActividades.actividades, idArea);
+    final (ini, fin) = rangoParaReferencia(temporal.referencia, temporal.modo);
+    final enPeriodo = temporal.suprimirDatosVisuales
+        ? <ActividadModelo>[]
+        : consultas.actividadesEnRango(
+            controladorActividades.actividades, ini, fin);
+    final actividades = consultas.actividadesPorArea(enPeriodo, idArea);
     final total = actividades.length;
     final hechas = actividades.where((t) => t.completada).length;
 
@@ -46,21 +55,24 @@ class PantallaDetalleArea extends StatelessWidget {
               acciones: [
                 IconButton(
                   onPressed: () async {
-                    final r = await mostrarModalHojaInferior<ResultadoModalArea>(
+                    final r =
+                        await mostrarModalHojaInferior<ResultadoModalArea>(
                       context: context,
                       contenido: (_) => ModalNuevaArea(areaExistente: area),
                     );
                     if (r == null || !context.mounted) return;
                     await controladorAreas.actualizarArea(r.area);
                   },
-                  icon: const Icon(Icons.edit_rounded, color: ColoresAplicacion.grisOscuro),
+                  icon: const Icon(Icons.edit_rounded,
+                      color: ColoresAplicacion.grisOscuro),
                 ),
                 IconButton(
                   onPressed: () async {
                     await controladorAreas.eliminarArea(idArea);
                     if (context.mounted) Navigator.of(context).pop();
                   },
-                  icon: const Icon(Icons.delete_outline_rounded, color: ColoresAplicacion.peligro),
+                  icon: const Icon(Icons.delete_outline_rounded,
+                      color: ColoresAplicacion.peligro),
                 ),
               ],
             ),
@@ -69,22 +81,27 @@ class PantallaDetalleArea extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
             sliver: SliverList.list(
               children: [
-                TarjetaResumenArea(
-                  area: area,
-                  totalActividades: total,
-                  completadas: hechas,
-                ),
-                const SizedBox(height: 20),
+                if (actividades.isNotEmpty) ...[
+                  TarjetaResumenArea(
+                    area: area,
+                    totalActividades: total,
+                    completadas: hechas,
+                  ),
+                  const SizedBox(height: 20),
+                ],
                 Row(
                   children: [
-                    Text('ACTIVIDADES', style: EstilosTextoAplicacion.etiquetaSeccion),
+                    Text('ACTIVIDADES',
+                        style: EstilosTextoAplicacion.etiquetaSeccion),
                     const Spacer(),
                     TextButton.icon(
                       style: TextButton.styleFrom(
                         backgroundColor: ColoresAplicacion.azulPrincipal,
                         foregroundColor: ColoresAplicacion.blanco,
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 10),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14)),
                       ),
                       onPressed: () async {
                         if (uid == null) return;
@@ -95,14 +112,30 @@ class PantallaDetalleArea extends StatelessWidget {
                           usuarioId: uid,
                         );
                         if (r == null || !context.mounted) return;
-                        await controladorActividades.crearActividad(r.actividad);
+                        await controladorActividades
+                            .crearActividad(r.actividad);
                       },
                       icon: const Icon(Icons.add_rounded, size: 20),
-                      label: const Text('Agregar', style: TextStyle(fontWeight: FontWeight.w800)),
+                      label: const Text('Agregar',
+                          style: TextStyle(fontWeight: FontWeight.w800)),
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
+                //Cuando no hay actividades, muestro un mensaje
+                if (actividades.isEmpty)
+                  Container(
+                    padding: const EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      color: ColoresAplicacion.blanco,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: ColoresAplicacion.bordeSutil),
+                    ),
+                    child: Text(
+                      'Agregá una nueva actividad.',
+                      style: EstilosTextoAplicacion.cuerpoSecundario,
+                    ),
+                  ),
               ],
             ),
           ),
@@ -116,7 +149,8 @@ class PantallaDetalleArea extends StatelessWidget {
                 return ItemActividadLista(
                   actividad: t,
                   area: area,
-                  alAlternar: () => controladorActividades.alternarCompletada(t.id, !t.completada),
+                  alAlternar: () => controladorActividades.alternarCompletada(
+                      t.id, !t.completada),
                   alEditar: () async {
                     if (uid == null) return;
                     final r = await mostrarModalNuevaActividad(
@@ -126,9 +160,11 @@ class PantallaDetalleArea extends StatelessWidget {
                       usuarioId: uid,
                     );
                     if (r == null || !context.mounted) return;
-                    await controladorActividades.actualizarActividad(r.actividad);
+                    await controladorActividades
+                        .actualizarActividad(r.actividad);
                   },
-                  alEliminar: () => controladorActividades.eliminarActividad(t.id),
+                  alEliminar: () =>
+                      controladorActividades.eliminarActividad(t.id),
                 );
               },
             ),

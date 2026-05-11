@@ -5,7 +5,9 @@ import '../componentes/grafico_dona.dart';
 import '../componentes/selector_fecha_global.dart';
 import '../controladores/controlador_actividades.dart';
 import '../controladores/controlador_areas.dart';
+import '../controladores/controlador_seleccion_temporal.dart';
 import '../dominio/enumeracion_rango_temporal.dart';
+import '../modelos/modelo_actividad.dart';
 import '../temas/colores_aplicacion.dart';
 import '../temas/decoraciones_aplicacion.dart';
 import '../temas/estilos_texto_aplicacion.dart';
@@ -13,19 +15,11 @@ import '../utilidades/utilidad_consultas_actividad.dart' as consultas;
 import '../utilidades/utilidad_fecha.dart';
 
 /// Estadísticas: donut de horas y detalle por área.
-class PantallaEstados extends StatefulWidget {
+class PantallaEstados extends StatelessWidget {
   const PantallaEstados({super.key});
 
-  @override
-  State<PantallaEstados> createState() => _PantallaEstadosState();
-}
-
-class _PantallaEstadosState extends State<PantallaEstados> {
-  EnumeracionRangoTemporal _modo = EnumeracionRangoTemporal.semana;
-  DateTime _referencia = DateTime.now();
-
-  double _divisorPromedio() {
-    switch (_modo) {
+  double _divisorPromedio(ControladorSeleccionTemporal temporal) {
+    switch (temporal.modo) {
       case EnumeracionRangoTemporal.dia:
         return 1;
       case EnumeracionRangoTemporal.semana:
@@ -39,20 +33,56 @@ class _PantallaEstadosState extends State<PantallaEstados> {
   Widget build(BuildContext context) {
     final controladorAreas = context.watch<ControladorAreas>();
     final controladorActividades = context.watch<ControladorActividades>();
+    final temporal = context.watch<ControladorSeleccionTemporal>();
 
-    final (ini, fin) = rangoParaReferencia(_referencia, _modo);
-    final mapaHoras = consultas.horasPorAreaEnRango(controladorActividades.actividades, ini, fin);
-    final totalHoras = mapaHoras.values.fold<double>(0, (a, b) => a + b);
-    final (hechas, pendientes, cumplido) =
-        consultas.resumenEstadisticas(controladorActividades.actividades, ini, fin);
+    final (ini, fin) = rangoParaReferencia(temporal.referencia, temporal.modo);
+    // ANTES
+    /*final actividadesPeriodo = temporal.suprimirDatosVisuales
+        ? <ActividadModelo>[]
+        : consultas.actividadesEnRango(
+            controladorActividades.actividades, ini, fin);
+*/
+// DESPUÉS
+    final actividadesPeriodo = temporal.suprimirDatosVisuales
+        ? <ActividadModelo>[]
+        : consultas
+            .actividadesEnRango(controladorActividades.actividades, ini, fin)
+            .where((a) => a.completada)
+            .toList();
 
-    final porciones = <PorcionHorasArea>[];
-    for (final a in controladorAreas.areas) {
-      final h = mapaHoras[a.id] ?? 0;
-      final pct = totalHoras <= 0 ? 0 : ((h / totalHoras) * 100).round();
-      porciones.add(PorcionHorasArea(area: a, horas: h, porcentaje: pct));
+    final sinDatosEnPeriodo = actividadesPeriodo.isEmpty;
+
+    late final List<PorcionHorasArea> porciones;
+    late final double totalHoras;
+    late final int hechas;
+    late final int pendientes;
+    late final int cumplido;
+
+    if (sinDatosEnPeriodo) {
+      porciones = [];
+      totalHoras = 0;
+      hechas = 0;
+      pendientes = 0;
+      cumplido = 0;
+    } else {
+      final mapaHoras =
+          consultas.horasPorAreaEnRango(actividadesPeriodo, ini, fin);
+      totalHoras = mapaHoras.values.fold<double>(0, (a, b) => a + b);
+      (hechas, pendientes, cumplido) =
+          consultas.resumenEstadisticas(actividadesPeriodo, ini, fin);
+
+      porciones = [];
+      for (final a in controladorAreas.areas) {
+        final h = mapaHoras[a.id] ?? 0;
+        if (h <= 0) continue;
+        final pct = totalHoras <= 0 ? 0 : ((h / totalHoras) * 100).round();
+        porciones.add(PorcionHorasArea(area: a, horas: h, porcentaje: pct));
+      }
+      porciones.sort((x, y) => y.horas.compareTo(x.horas));
     }
-    porciones.sort((x, y) => y.horas.compareTo(x.horas));
+
+    final mostrarBloqueDatos = !sinDatosEnPeriodo;
+    final mostrarGraficos = mostrarBloqueDatos && porciones.isNotEmpty;
 
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
@@ -68,69 +98,97 @@ class _PantallaEstadosState extends State<PantallaEstados> {
           padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
           sliver: SliverToBoxAdapter(
             child: SelectorFechaGlobal(
-              modo: _modo,
-              referencia: _referencia,
-              alCambiarModo: (m) => setState(() => _modo = m),
-              alAnterior: () => setState(() {
-                _referencia = desplazarReferencia(_referencia, _modo, -1);
-              }),
-              alSiguiente: () => setState(() {
-                _referencia = desplazarReferencia(_referencia, _modo, 1);
-              }),
+              modo: temporal.modo,
+              referencia: temporal.referencia,
+              alCambiarModo: (m) => context
+                  .read<ControladorSeleccionTemporal>()
+                  .establecerModo(m),
+              alAnterior: () =>
+                  context.read<ControladorSeleccionTemporal>().desplazar(-1),
+              alSiguiente: () =>
+                  context.read<ControladorSeleccionTemporal>().desplazar(1),
             ),
           ),
         ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          sliver: SliverToBoxAdapter(
-            child: Row(
-              children: [
-                Expanded(
-                  child: _TarjetaMiniEstadistica(
-                    icono: Icons.check_circle_rounded,
-                    colorIcono: ColoresAplicacion.exito,
-                    valor: '$hechas',
-                    etiqueta: 'Hechas',
+        //Aca muestro un mensaje si no hay datos
+        if (sinDatosEnPeriodo)
+          const SliverFillRemaining(
+            hasScrollBody: false,
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.bar_chart_rounded, size: 48, color: Colors.grey),
+                  SizedBox(height: 12),
+                  Text(
+                    'Sin actividad completada',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _TarjetaMiniEstadistica(
-                    icono: Icons.fact_check_rounded,
-                    colorIcono: ColoresAplicacion.advertencia,
-                    valor: '$pendientes',
-                    etiqueta: 'Pendientes',
+                  SizedBox(height: 6),
+                  Text(
+                    'Completá una tarea para ver tus estadísticas',
+                    style: TextStyle(fontSize: 13, color: Colors.grey),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _TarjetaMiniEstadistica(
-                    icono: Icons.timelapse_rounded,
-                    colorIcono: ColoresAplicacion.azulPrincipal,
-                    valor: '$cumplido%',
-                    etiqueta: 'Cumplido',
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.fromLTRB(20, 14, 20, 12),
-          sliver: SliverToBoxAdapter(
-            child: GraficoDona(porciones: porciones, horasTotales: totalHoras),
-          ),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-          sliver: SliverToBoxAdapter(
-            child: ListaResumenDona(
-              porciones: porciones,
-              horasTotales: totalHoras,
-              divisorPromedioDiario: _divisorPromedio(),
+        if (mostrarBloqueDatos)
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            sliver: SliverToBoxAdapter(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _TarjetaMiniEstadistica(
+                      icono: Icons.check_circle_rounded,
+                      colorIcono: ColoresAplicacion.exito,
+                      valor: '$hechas',
+                      etiqueta: 'Hechas',
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _TarjetaMiniEstadistica(
+                      icono: Icons.fact_check_rounded,
+                      colorIcono: ColoresAplicacion.advertencia,
+                      valor: '$pendientes',
+                      etiqueta: 'Pendientes',
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _TarjetaMiniEstadistica(
+                      icono: Icons.timelapse_rounded,
+                      colorIcono: ColoresAplicacion.azulPrincipal,
+                      valor: '$cumplido%',
+                      etiqueta: 'Cumplido',
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
+        if (mostrarGraficos) ...[
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(20, 14, 20, 12),
+            sliver: SliverToBoxAdapter(
+              child:
+                  GraficoDona(porciones: porciones, horasTotales: totalHoras),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+            sliver: SliverToBoxAdapter(
+              child: ListaResumenDona(
+                porciones: porciones,
+                horasTotales: totalHoras,
+                divisorPromedioDiario: _divisorPromedio(temporal),
+              ),
+            ),
+          ),
+        ],
+        const SliverToBoxAdapter(child: SizedBox(height: 24)),
       ],
     );
   }
@@ -163,7 +221,9 @@ class _TarjetaMiniEstadistica extends StatelessWidget {
             child: Icon(icono, color: colorIcono, size: 20),
           ),
           const SizedBox(height: 10),
-          Text(valor, style: EstilosTextoAplicacion.tituloPantalla.copyWith(fontSize: 22)),
+          Text(valor,
+              style:
+                  EstilosTextoAplicacion.tituloPantalla.copyWith(fontSize: 22)),
           Text(etiqueta, style: EstilosTextoAplicacion.cuerpoSecundario),
         ],
       ),

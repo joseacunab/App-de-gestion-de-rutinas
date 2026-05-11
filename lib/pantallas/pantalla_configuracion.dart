@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../componentes/barra_aplicacion_personalizada.dart';
 import '../controladores/controlador_actividades.dart';
 import '../controladores/controlador_areas.dart';
+import '../controladores/controlador_seleccion_temporal.dart';
 import '../controladores/controlador_usuario.dart';
 import '../temas/colores_aplicacion.dart';
 import '../temas/decoraciones_aplicacion.dart';
@@ -88,6 +89,7 @@ class PantallaConfiguracion extends StatelessWidget {
                   onTap: () async {
                     context.read<ControladorActividades>().desvincularUsuario();
                     context.read<ControladorAreas>().desvincularUsuario();
+                    context.read<ControladorSeleccionTemporal>().reiniciar();
                     await context.read<ControladorUsuario>().cerrarSesion();
                     if (context.mounted) {
                       Navigator.of(context).pushNamedAndRemoveUntil('/', (ruta) => false);

@@ -30,13 +30,15 @@ class ItemActividadLista extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hora = DateFormat.Hm().format(actividad.momentoAgendado);
-    final subtitulo = '${area.nombre} · $hora · ${actividad.duracionMinutos.round()}min';
+    final subtitulo =
+        '${area.nombre} · $hora · ${actividad.duracionMinutos.round()}min';
     final colorArea = colorDesdeHex(area.colorHex);
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(DecoracionesAplicacion.radioTarjeta),
+        borderRadius:
+            BorderRadius.circular(DecoracionesAplicacion.radioTarjeta),
         onTap: alAlternar,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 240),
@@ -44,7 +46,8 @@ class ItemActividadLista extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           decoration: DecoracionesAplicacion.tarjetaElevada(),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            //crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               GestureDetector(
                 onTap: alAlternar,
@@ -54,7 +57,9 @@ class ItemActividadLista extends StatelessWidget {
                   height: 28,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: actividad.completada ? ColoresAplicacion.azulPrincipal : Colors.transparent,
+                    color: actividad.completada
+                        ? ColoresAplicacion.azulPrincipal
+                        : Colors.transparent,
                     border: Border.all(
                       color: actividad.completada
                           ? ColoresAplicacion.azulPrincipal
@@ -63,7 +68,8 @@ class ItemActividadLista extends StatelessWidget {
                     ),
                   ),
                   child: actividad.completada
-                      ? const Icon(Icons.check_rounded, size: 18, color: ColoresAplicacion.blanco)
+                      ? const Icon(Icons.check_rounded,
+                          size: 18, color: ColoresAplicacion.blanco)
                       : null,
                 ),
               ),
@@ -89,7 +95,9 @@ class ItemActividadLista extends StatelessWidget {
                     AnimatedDefaultTextStyle(
                       duration: const Duration(milliseconds: 200),
                       style: EstilosTextoAplicacion.tituloTarjeta.copyWith(
-                        decoration: actividad.completada ? TextDecoration.lineThrough : null,
+                        decoration: actividad.completada
+                            ? TextDecoration.lineThrough
+                            : null,
                         color: actividad.completada
                             ? ColoresAplicacion.grisMedio
                             : ColoresAplicacion.grisOscuro,
@@ -97,7 +105,8 @@ class ItemActividadLista extends StatelessWidget {
                       child: Text(actividad.titulo),
                     ),
                     const SizedBox(height: 4),
-                    Text(subtitulo, style: EstilosTextoAplicacion.cuerpoSecundario),
+                    Text(subtitulo,
+                        style: EstilosTextoAplicacion.cuerpoSecundario),
                   ],
                 ),
               ),
@@ -120,12 +129,14 @@ class ItemActividadLista extends StatelessWidget {
                         IconButton(
                           visualDensity: VisualDensity.compact,
                           onPressed: alEditar,
-                          icon: const Icon(Icons.edit_rounded, size: 20, color: ColoresAplicacion.grisMedio),
+                          icon: const Icon(Icons.edit_rounded,
+                              size: 20, color: ColoresAplicacion.grisMedio),
                         ),
                         IconButton(
                           visualDensity: VisualDensity.compact,
                           onPressed: alEliminar,
-                          icon: const Icon(Icons.delete_outline_rounded, size: 20, color: ColoresAplicacion.grisMedio),
+                          icon: const Icon(Icons.delete_outline_rounded,
+                              size: 20, color: ColoresAplicacion.grisMedio),
                         ),
                       ],
                     ),

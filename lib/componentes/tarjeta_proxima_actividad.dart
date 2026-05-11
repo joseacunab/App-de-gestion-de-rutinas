@@ -1,3 +1,4 @@
+import 'package:dia_a_dia/utilidades/mapeador_iconos_area.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../modelos/modelo_actividad.dart';
@@ -47,13 +48,10 @@ class TarjetaProximaActividad extends StatelessWidget {
                 color: colorArea,
                 shape: BoxShape.circle,
               ),
-              child: Text(
-                '$dia',
-                style: const TextStyle(
-                  color: ColoresAplicacion.blanco,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 18,
-                ),
+              child: Icon(
+                iconoDesdeClave(area.icono),
+                color: ColoresAplicacion.blanco,
+                size: 24,
               ),
             ),
             const SizedBox(width: 14),
@@ -61,7 +59,8 @@ class TarjetaProximaActividad extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(actividad.titulo, style: EstilosTextoAplicacion.tituloTarjeta),
+                  Text(actividad.titulo,
+                      style: EstilosTextoAplicacion.tituloTarjeta),
                   const SizedBox(height: 4),
                   Text(
                     '${area.nombre} · $hora hs',

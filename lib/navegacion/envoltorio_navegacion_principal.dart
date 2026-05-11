@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../componentes/barra_navegacion_inferior_personalizada.dart';
+import '../controladores/controlador_seleccion_temporal.dart';
 import '../pantallas/pantalla_areas.dart';
 import '../pantallas/pantalla_configuracion.dart';
 import '../pantallas/pantalla_estados.dart';
@@ -14,8 +18,11 @@ class EnvoltorioNavegacionPrincipal extends StatefulWidget {
   State<EnvoltorioNavegacionPrincipal> createState() => _EnvoltorioNavegacionPrincipalState();
 }
 
-class _EnvoltorioNavegacionPrincipalState extends State<EnvoltorioNavegacionPrincipal> {
+class _EnvoltorioNavegacionPrincipalState extends State<EnvoltorioNavegacionPrincipal>
+    with WidgetsBindingObserver {
   int _indice = 0;
+  Timer? _temporizadorCalendario;
+  bool _temporizadorIniciado = false;
 
   static const List<Widget> _pantallas = [
     PantallaInicio(),
@@ -52,6 +59,39 @@ class _EnvoltorioNavegacionPrincipalState extends State<EnvoltorioNavegacionPrin
       iconoActivo: Icons.settings_rounded,
     ),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_temporizadorIniciado) {
+      _temporizadorIniciado = true;
+      final temporal = context.read<ControladorSeleccionTemporal>();
+      _temporizadorCalendario = Timer.periodic(
+        const Duration(seconds: 30),
+        (_) => temporal.comprobarAvanceCalendario(),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _temporizadorCalendario?.cancel();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && mounted) {
+      context.read<ControladorSeleccionTemporal>().comprobarAvanceCalendario();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

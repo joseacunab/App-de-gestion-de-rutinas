@@ -1,6 +1,7 @@
 import 'package:dia_a_dia/aplicacion.dart';
 import 'package:dia_a_dia/controladores/controlador_actividades.dart';
 import 'package:dia_a_dia/controladores/controlador_areas.dart';
+import 'package:dia_a_dia/controladores/controlador_seleccion_temporal.dart';
 import 'package:dia_a_dia/controladores/controlador_usuario.dart';
 import 'package:dia_a_dia/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,6 +19,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ControladorUsuario()),
+        ChangeNotifierProvider(create: (_) => ControladorSeleccionTemporal()),
         ChangeNotifierProvider(create: (_) => ControladorAreas()),
         ChangeNotifierProvider(create: (_) => ControladorActividades()),
       ],

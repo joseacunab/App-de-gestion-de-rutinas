@@ -7,6 +7,7 @@ import '../componentes/tarjeta_progreso_diario.dart';
 import '../componentes/tarjeta_proxima_actividad.dart';
 import '../controladores/controlador_actividades.dart';
 import '../controladores/controlador_areas.dart';
+import '../controladores/controlador_seleccion_temporal.dart';
 import '../controladores/controlador_usuario.dart';
 import '../temas/colores_aplicacion.dart';
 import '../temas/estilos_texto_aplicacion.dart';
@@ -25,7 +26,8 @@ class PantallaInicio extends StatelessWidget {
 
   String _tituloUsuario(ControladorUsuario cu) {
     final u = cu.usuario;
-    if (u == null || (u.nombre.isEmpty && u.apellido.isEmpty)) return 'Día a Día';
+    if (u == null || (u.nombre.isEmpty && u.apellido.isEmpty))
+      return 'Día a Día';
     return '${u.nombre} ${u.apellido}'.trim();
   }
 
@@ -34,8 +36,11 @@ class PantallaInicio extends StatelessWidget {
     final controladorUsuario = context.watch<ControladorUsuario>();
     final controladorAreas = context.watch<ControladorAreas>();
     final controladorActividades = context.watch<ControladorActividades>();
+    // Reconstruye al cambiar el día (reloj) aunque solo usemos actividades de “hoy” calendario.
+    context.watch<ControladorSeleccionTemporal>();
 
-    final hoy = DateTime.now();
+    final ahora = DateTime.now();
+    final hoy = DateTime(ahora.year, ahora.month, ahora.day);
     final actividades = controladorActividades.actividades;
     final (total, hechas, pct) = consultas.resumenProgresoDia(actividades, hoy);
     final progreso = total == 0 ? 0.0 : hechas / total;
@@ -62,7 +67,8 @@ class PantallaInicio extends StatelessWidget {
                   );
                   if (r == null || !context.mounted) return;
                   if (r.esEdicion) {
-                    await controladorActividades.actualizarActividad(r.actividad);
+                    await controladorActividades
+                        .actualizarActividad(r.actividad);
                   } else {
                     await controladorActividades.crearActividad(r.actividad);
                   }
@@ -81,9 +87,11 @@ class PantallaInicio extends StatelessWidget {
                 progreso: progreso,
               ),
               const SizedBox(height: 20),
-              Text('PRÓXIMA ACTIVIDAD', style: EstilosTextoAplicacion.etiquetaSeccion),
+              Text('PRÓXIMA ACTIVIDAD',
+                  style: EstilosTextoAplicacion.etiquetaSeccion),
               const SizedBox(height: 10),
-              if (proxima != null && controladorAreas.areaPorId(proxima.areaId) != null)
+              if (proxima != null &&
+                  controladorAreas.areaPorId(proxima.areaId) != null)
                 TarjetaProximaActividad(
                   actividad: proxima,
                   area: controladorAreas.areaPorId(proxima.areaId)!,
@@ -104,6 +112,20 @@ class PantallaInicio extends StatelessWidget {
               const SizedBox(height: 22),
               Text('HOY', style: EstilosTextoAplicacion.etiquetaSeccion),
               const SizedBox(height: 10),
+              //Aca muestro si no hay datos un mensaje
+              if (lista.isEmpty)
+                Container(
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: ColoresAplicacion.blanco,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: ColoresAplicacion.bordeSutil),
+                  ),
+                  child: Text(
+                    'No tenés tareas para hoy.',
+                    style: EstilosTextoAplicacion.cuerpoSecundario,
+                  ),
+                ),
             ],
           ),
         ),
@@ -119,7 +141,8 @@ class PantallaInicio extends StatelessWidget {
               return ItemActividadLista(
                 actividad: t,
                 area: area,
-                alAlternar: () => controladorActividades.alternarCompletada(t.id, !t.completada),
+                alAlternar: () => controladorActividades.alternarCompletada(
+                    t.id, !t.completada),
                 alEditar: () async {
                   if (uid == null) return;
                   final r = await mostrarModalNuevaActividad(
@@ -131,7 +154,8 @@ class PantallaInicio extends StatelessWidget {
                   if (r == null || !context.mounted) return;
                   await controladorActividades.actualizarActividad(r.actividad);
                 },
-                alEliminar: () => controladorActividades.eliminarActividad(t.id),
+                alEliminar: () =>
+                    controladorActividades.eliminarActividad(t.id),
                 mostrarAcciones: true,
               );
             },

@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import '../dominio/enumeracion_rango_temporal.dart';
 
 String etiquetaRango(EnumeracionRangoTemporal r) {
@@ -32,6 +34,14 @@ String etiquetaRango(EnumeracionRangoTemporal r) {
   }
 }
 
+/// Comprueba si el día civil [dia] cae dentro del rango inclusivo [inicio]–[fin] (solo fecha).
+bool diaCalendarioEnRango(DateTime dia, DateTime inicio, DateTime fin) {
+  final d = DateTime(dia.year, dia.month, dia.day);
+  final i = DateTime(inicio.year, inicio.month, inicio.day);
+  final f = DateTime(fin.year, fin.month, fin.day);
+  return !d.isBefore(i) && !d.isAfter(f);
+}
+
 DateTime desplazarReferencia(
   DateTime referencia,
   EnumeracionRangoTemporal modo,
@@ -43,6 +53,7 @@ DateTime desplazarReferencia(
     case EnumeracionRangoTemporal.semana:
       return referencia.add(Duration(days: 7 * pasos));
     case EnumeracionRangoTemporal.mes:
-      return DateTime(referencia.year, referencia.month + pasos, referencia.day);
+      return DateTime(
+          referencia.year, referencia.month + pasos, referencia.day);
   }
 }

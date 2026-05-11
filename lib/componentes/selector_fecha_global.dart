@@ -23,18 +23,25 @@ class SelectorFechaGlobal extends StatelessWidget {
   final VoidCallback alSiguiente;
 
   String _etiquetaCentral() {
+    final hoy = DateTime.now();
     switch (modo) {
       case EnumeracionRangoTemporal.dia:
-        final hoy = DateTime.now();
-        final esHoy =
-            referencia.year == hoy.year &&
+        final esHoy = referencia.year == hoy.year &&
             referencia.month == hoy.month &&
             referencia.day == hoy.day;
         if (esHoy) return 'Hoy';
         return DateFormat('dd/MM/yyyy').format(referencia);
+
       case EnumeracionRangoTemporal.semana:
-        return 'Esta semana';
+        final (ini, fin) = rangoParaReferencia(hoy, modo);
+        final esSemanaActual = diaCalendarioEnRango(referencia, ini, fin);
+        if (esSemanaActual) return 'Esta semana';
+        return DateFormat('dd/MM/yyyy').format(referencia);
+
       case EnumeracionRangoTemporal.mes:
+        final esMesActual =
+            referencia.year == hoy.year && referencia.month == hoy.month;
+        if (esMesActual) return 'Este mes';
         return DateFormat('MMMM yyyy', 'es').format(referencia);
     }
   }
@@ -58,7 +65,8 @@ class SelectorFechaGlobal extends StatelessWidget {
                   duration: const Duration(milliseconds: 240),
                   curve: Curves.easeOutCubic,
                   decoration: BoxDecoration(
-                    color: activo ? ColoresAplicacion.blanco : Colors.transparent,
+                    color:
+                        activo ? ColoresAplicacion.blanco : Colors.transparent,
                     borderRadius: BorderRadius.circular(999),
                     boxShadow: activo
                         ? [
@@ -109,7 +117,8 @@ class SelectorFechaGlobal extends StatelessWidget {
                 child: Text(
                   _etiquetaCentral(),
                   textAlign: TextAlign.center,
-                  style: EstilosTextoAplicacion.tituloTarjeta.copyWith(fontSize: 15),
+                  style: EstilosTextoAplicacion.tituloTarjeta
+                      .copyWith(fontSize: 15),
                 ),
               ),
               IconButton(
