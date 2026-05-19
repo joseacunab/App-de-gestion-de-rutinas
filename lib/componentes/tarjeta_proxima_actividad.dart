@@ -34,7 +34,7 @@ class TarjetaProximaActividad extends StatelessWidget {
         return Transform.scale(scale: escala, child: child);
       },
       child: Container(
-        decoration: DecoracionesAplicacion.tarjetaPlana().copyWith(
+        decoration: DecoracionesAplicacion.tarjetaPlana(context).copyWith(
           border: Border.all(color: colorBorde, width: 1.2),
         ),
         padding: const EdgeInsets.all(16),
@@ -60,16 +60,16 @@ class TarjetaProximaActividad extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(actividad.titulo,
-                      style: EstilosTextoAplicacion.tituloTarjeta),
+                      style: EstilosTextoAplicacion.tituloTarjeta(context)),
                   const SizedBox(height: 4),
                   Text(
                     '${area.nombre} · $hora hs',
-                    style: EstilosTextoAplicacion.cuerpoSecundario,
+                    style: EstilosTextoAplicacion.cuerpoSecundario(context),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     'Prioridad: ${etiquetaPrioridadCadena(actividad.prioridad)}',
-                    style: EstilosTextoAplicacion.cuerpoSecundario.copyWith(
+                    style: EstilosTextoAplicacion.cuerpoSecundario(context).copyWith(
                       color: colorPrioridadCadena(actividad.prioridad),
                       fontWeight: FontWeight.w700,
                     ),

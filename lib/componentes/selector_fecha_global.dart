@@ -54,7 +54,7 @@ class SelectorFechaGlobal extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-            color: ColoresAplicacion.grisClaro,
+            color: context.superficieSutil,
             borderRadius: BorderRadius.circular(999),
           ),
           child: Row(
@@ -66,7 +66,7 @@ class SelectorFechaGlobal extends StatelessWidget {
                   curve: Curves.easeOutCubic,
                   decoration: BoxDecoration(
                     color:
-                        activo ? ColoresAplicacion.blanco : Colors.transparent,
+                        activo ? context.superficie : Colors.transparent,
                     borderRadius: BorderRadius.circular(999),
                     boxShadow: activo
                         ? [
@@ -105,26 +105,26 @@ class SelectorFechaGlobal extends StatelessWidget {
         const SizedBox(height: 12),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-          decoration: DecoracionesAplicacion.tarjetaElevada(),
+          decoration: DecoracionesAplicacion.tarjetaElevada(context),
           child: Row(
             children: [
               IconButton(
                 onPressed: alAnterior,
                 icon: const Icon(Icons.chevron_left_rounded),
-                color: ColoresAplicacion.grisOscuro,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
               Expanded(
                 child: Text(
                   _etiquetaCentral(),
                   textAlign: TextAlign.center,
-                  style: EstilosTextoAplicacion.tituloTarjeta
+                  style: EstilosTextoAplicacion.tituloTarjeta(context)
                       .copyWith(fontSize: 15),
                 ),
               ),
               IconButton(
                 onPressed: alSiguiente,
                 icon: const Icon(Icons.chevron_right_rounded),
-                color: ColoresAplicacion.grisOscuro,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ],
           ),

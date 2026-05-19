@@ -14,3 +14,14 @@ abstract final class ColoresAplicacion {
   static const Color advertencia = Color(0xFFF59E0B);
   static const Color peligro = Color(0xFFEF4444);
 }
+
+/// Superficies y bordes derivados del [Theme] activo (claro/oscuro).
+extension SuperficiesTema on BuildContext {
+  ThemeData get tema => Theme.of(this);
+  ColorScheme get esquema => tema.colorScheme;
+
+  Color get superficie => esquema.surface;
+  Color get superficieContenedor => esquema.surfaceContainerHighest;
+  Color get superficieSutil => esquema.surfaceContainerHigh;
+  Color get borde => tema.dividerColor;
+}

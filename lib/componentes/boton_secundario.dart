@@ -17,7 +17,7 @@ class BotonSecundario extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final boton = Material(
-      color: ColoresAplicacion.grisClaro,
+      color: context.superficieSutil,
       borderRadius: BorderRadius.circular(DecoracionesAplicacion.radioBoton),
       child: InkWell(
         borderRadius: BorderRadius.circular(DecoracionesAplicacion.radioBoton),
@@ -27,8 +27,8 @@ class BotonSecundario extends StatelessWidget {
           child: Center(
             child: Text(
               etiqueta,
-              style: const TextStyle(
-                color: ColoresAplicacion.grisOscuro,
+              style: TextStyle(
+                color: context.esquema.onSurface,
                 fontWeight: FontWeight.w700,
                 fontSize: 15,
               ),

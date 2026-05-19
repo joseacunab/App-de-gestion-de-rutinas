@@ -30,14 +30,14 @@ class BarraNavegacionInferiorPersonalizada extends StatelessWidget {
     return Material(
       elevation: 12,
       shadowColor: Colors.black.withValues(alpha: 0.08),
-      color: ColoresAplicacion.blanco,
+      color: context.superficie,
       child: SafeArea(
         top: false,
         child: Container(
           height: 68,
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-          decoration: const BoxDecoration(
-            border: Border(top: BorderSide(color: ColoresAplicacion.bordeSutil)),
+          decoration: BoxDecoration(
+            border: Border(top: BorderSide(color: context.borde)),
           ),
           child: Row(
             children: List.generate(elementos.length, (i) {

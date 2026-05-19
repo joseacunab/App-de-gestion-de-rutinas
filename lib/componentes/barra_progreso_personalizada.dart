@@ -26,7 +26,7 @@ class BarraProgresoPersonalizada extends StatelessWidget {
           Container(
             height: altura,
             width: double.infinity,
-            color: ColoresAplicacion.grisClaro,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
           ),
           AnimatedFractionallySizedBox(
             duration: const Duration(milliseconds: 420),

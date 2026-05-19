@@ -27,7 +27,7 @@ class PantallaInicio extends StatelessWidget {
   String _tituloUsuario(ControladorUsuario cu) {
     final u = cu.usuario;
     if (u == null || (u.nombre.isEmpty && u.apellido.isEmpty))
-      return 'Día a Día';
+      return 'José Acuña';
     return '${u.nombre} ${u.apellido}'.trim();
   }
 
@@ -88,7 +88,7 @@ class PantallaInicio extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text('PRÓXIMA ACTIVIDAD',
-                  style: EstilosTextoAplicacion.etiquetaSeccion),
+                  style: EstilosTextoAplicacion.etiquetaSeccion(context)),
               const SizedBox(height: 10),
               if (proxima != null &&
                   controladorAreas.areaPorId(proxima.areaId) != null)
@@ -100,30 +100,30 @@ class PantallaInicio extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
-                    color: ColoresAplicacion.blanco,
+                    color: context.superficie,
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: ColoresAplicacion.bordeSutil),
+                    border: Border.all(color: context.borde),
                   ),
                   child: Text(
                     'No hay actividades pendientes hoy.',
-                    style: EstilosTextoAplicacion.cuerpoSecundario,
+                    style: EstilosTextoAplicacion.cuerpoSecundario(context),
                   ),
                 ),
               const SizedBox(height: 22),
-              Text('HOY', style: EstilosTextoAplicacion.etiquetaSeccion),
+              Text('HOY', style: EstilosTextoAplicacion.etiquetaSeccion(context)),
               const SizedBox(height: 10),
               //Aca muestro si no hay datos un mensaje
               if (lista.isEmpty)
                 Container(
                   padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
-                    color: ColoresAplicacion.blanco,
+                    color: context.superficie,
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: ColoresAplicacion.bordeSutil),
+                    border: Border.all(color: context.borde),
                   ),
                   child: Text(
                     'No tenés tareas para hoy.',
-                    style: EstilosTextoAplicacion.cuerpoSecundario,
+                    style: EstilosTextoAplicacion.cuerpoSecundario(context),
                   ),
                 ),
             ],

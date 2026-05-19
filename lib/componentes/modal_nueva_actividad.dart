@@ -125,14 +125,14 @@ class _DialogoActividadState extends State<_DialogoActividad> {
     if (widget.areas.isEmpty) {
       return Center(
         child: Material(
-          color: ColoresAplicacion.blanco,
+          color: context.superficie,
           borderRadius: BorderRadius.circular(DecoracionesAplicacion.radioModal),
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Crea al menos un área antes de agregar actividades.', style: EstilosTextoAplicacion.cuerpo),
+                Text('Crea al menos un área antes de agregar actividades.', style: EstilosTextoAplicacion.cuerpo(context)),
                 const SizedBox(height: 16),
                 BotonSecundario(etiqueta: 'Cerrar', alExpandirse: true, onPresionado: () => Navigator.pop(context)),
               ],
@@ -151,7 +151,7 @@ class _DialogoActividadState extends State<_DialogoActividad> {
           margin: const EdgeInsets.symmetric(horizontal: 16),
           padding: const EdgeInsets.fromLTRB(20, 18, 12, 20),
           decoration: BoxDecoration(
-            color: ColoresAplicacion.blanco,
+            color: context.superficie,
             borderRadius: BorderRadius.circular(DecoracionesAplicacion.radioModal),
             boxShadow: [
               BoxShadow(
@@ -174,12 +174,12 @@ class _DialogoActividadState extends State<_DialogoActividad> {
                         children: [
                           Text(
                             esEdicion ? 'Editar actividad' : 'Nueva actividad',
-                            style: EstilosTextoAplicacion.tituloPantalla.copyWith(fontSize: 22),
+                            style: EstilosTextoAplicacion.tituloPantalla(context).copyWith(fontSize: 22),
                           ),
                           const SizedBox(height: 6),
                           Text(
                             'Completa los datos para crear una nueva tarea.',
-                            style: EstilosTextoAplicacion.cuerpoSecundario,
+                            style: EstilosTextoAplicacion.cuerpoSecundario(context),
                           ),
                         ],
                       ),
@@ -204,7 +204,7 @@ class _DialogoActividadState extends State<_DialogoActividad> {
                   maxLineas: 3,
                 ),
                 const SizedBox(height: 12),
-                Text('ÁREA', style: EstilosTextoAplicacion.etiquetaSeccion),
+                Text('ÁREA', style: EstilosTextoAplicacion.etiquetaSeccion(context)),
                 const SizedBox(height: 8),
                 _SelectorArea(
                   areas: widget.areas,
@@ -218,7 +218,7 @@ class _DialogoActividadState extends State<_DialogoActividad> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('FECHA', style: EstilosTextoAplicacion.etiquetaSeccion),
+                          Text('FECHA', style: EstilosTextoAplicacion.etiquetaSeccion(context)),
                           const SizedBox(height: 8),
                           _CajaSelector(
                             texto: DateFormat('dd/MM/yyyy').format(_fecha),
@@ -233,7 +233,7 @@ class _DialogoActividadState extends State<_DialogoActividad> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('HORA', style: EstilosTextoAplicacion.etiquetaSeccion),
+                          Text('HORA', style: EstilosTextoAplicacion.etiquetaSeccion(context)),
                           const SizedBox(height: 8),
                           _CajaSelector(
                             texto: _hora.format(context),
@@ -252,7 +252,7 @@ class _DialogoActividadState extends State<_DialogoActividad> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('DURACIÓN (MIN)', style: EstilosTextoAplicacion.etiquetaSeccion),
+                          Text('DURACIÓN (MIN)', style: EstilosTextoAplicacion.etiquetaSeccion(context)),
                           const SizedBox(height: 8),
                           TextField(
                             controller: _duracion,
@@ -267,7 +267,7 @@ class _DialogoActividadState extends State<_DialogoActividad> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('PRIORIDAD', style: EstilosTextoAplicacion.etiquetaSeccion),
+                          Text('PRIORIDAD', style: EstilosTextoAplicacion.etiquetaSeccion(context)),
                           const SizedBox(height: 8),
                           DropdownButtonFormField<EnumeracionPrioridad>(
                             value: _prioridad,
@@ -401,7 +401,7 @@ class _CajaSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: ColoresAplicacion.grisClaro,
+      color: context.superficieContenedor,
       borderRadius: BorderRadius.circular(DecoracionesAplicacion.radioCampo),
       child: InkWell(
         borderRadius: BorderRadius.circular(DecoracionesAplicacion.radioCampo),
@@ -410,7 +410,7 @@ class _CajaSelector extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
           child: Row(
             children: [
-              Expanded(child: Text(texto, style: EstilosTextoAplicacion.cuerpo)),
+              Expanded(child: Text(texto, style: EstilosTextoAplicacion.cuerpo(context))),
               Icon(icono, size: 20, color: ColoresAplicacion.grisMedio),
             ],
           ),

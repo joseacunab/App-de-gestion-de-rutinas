@@ -44,7 +44,7 @@ class ItemActividadLista extends StatelessWidget {
           duration: const Duration(milliseconds: 240),
           curve: Curves.easeOutCubic,
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-          decoration: DecoracionesAplicacion.tarjetaElevada(),
+          decoration: DecoracionesAplicacion.tarjetaElevada(context),
           child: Row(
             //crossAxisAlignment: CrossAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -63,7 +63,7 @@ class ItemActividadLista extends StatelessWidget {
                     border: Border.all(
                       color: actividad.completada
                           ? ColoresAplicacion.azulPrincipal
-                          : ColoresAplicacion.bordeSutil,
+                          : context.borde,
                       width: 2,
                     ),
                   ),
@@ -94,19 +94,19 @@ class ItemActividadLista extends StatelessWidget {
                   children: [
                     AnimatedDefaultTextStyle(
                       duration: const Duration(milliseconds: 200),
-                      style: EstilosTextoAplicacion.tituloTarjeta.copyWith(
+                      style: EstilosTextoAplicacion.tituloTarjeta(context).copyWith(
                         decoration: actividad.completada
                             ? TextDecoration.lineThrough
                             : null,
                         color: actividad.completada
                             ? ColoresAplicacion.grisMedio
-                            : ColoresAplicacion.grisOscuro,
+                            : null,
                       ),
                       child: Text(actividad.titulo),
                     ),
                     const SizedBox(height: 4),
                     Text(subtitulo,
-                        style: EstilosTextoAplicacion.cuerpoSecundario),
+                        style: EstilosTextoAplicacion.cuerpoSecundario(context)),
                   ],
                 ),
               ),

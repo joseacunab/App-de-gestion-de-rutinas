@@ -27,24 +27,24 @@ class CampoTextoAutenticacion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tieneError = textoError != null && textoError!.isNotEmpty;
-    final colorBorde = tieneError ? ColoresAplicacion.peligro : ColoresAplicacion.bordeSutil;
+    final colorBorde = tieneError ? ColoresAplicacion.peligro : context.borde;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(etiqueta, style: EstilosTextoAplicacion.cuerpo.copyWith(fontWeight: FontWeight.w600)),
+        Text(etiqueta, style: EstilosTextoAplicacion.cuerpo(context).copyWith(fontWeight: FontWeight.w600)),
         const SizedBox(height: 8),
         TextField(
           controller: controlador,
           keyboardType: teclado,
           obscureText: ocultarTexto,
           textInputAction: autocompletar,
-          style: EstilosTextoAplicacion.cuerpo,
+          style: EstilosTextoAplicacion.cuerpo(context),
           decoration: InputDecoration(
             hintText: placeholder,
-            hintStyle: EstilosTextoAplicacion.cuerpoSecundario,
+            hintStyle: EstilosTextoAplicacion.cuerpoSecundario(context),
             filled: true,
-            fillColor: ColoresAplicacion.grisClaro,
+            fillColor: context.superficieContenedor,
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(DecoracionesAplicacion.radioCampo),

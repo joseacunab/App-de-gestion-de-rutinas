@@ -45,7 +45,7 @@ class TarjetaAreaLista extends StatelessWidget {
           onTap: onTap,
           child: Container(
             padding: const EdgeInsets.all(16),
-            decoration: DecoracionesAplicacion.tarjetaElevada(),
+            decoration: DecoracionesAplicacion.tarjetaElevada(context),
             child: Row(
               children: [
                 Container(
@@ -62,18 +62,18 @@ class TarjetaAreaLista extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(area.nombre, style: EstilosTextoAplicacion.tituloTarjeta),
+                      Text(area.nombre, style: EstilosTextoAplicacion.tituloTarjeta(context)),
                       const SizedBox(height: 4),
                       Text(
                         '$pendientes pendientes · $porcentajeProgreso%',
-                        style: EstilosTextoAplicacion.cuerpoSecundario,
+                        style: EstilosTextoAplicacion.cuerpoSecundario(context),
                       ),
                       const SizedBox(height: 10),
                       BarraProgresoPersonalizada(
                         progreso: porcentajeProgreso / 100.0,
                         color: porcentajeProgreso > 0
                             ? ColoresAplicacion.azulPrincipal
-                            : ColoresAplicacion.grisClaro,
+                            : context.superficieContenedor,
                         altura: 6,
                         radio: 6,
                       ),

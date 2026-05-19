@@ -59,25 +59,25 @@ class _GraficoDonaState extends State<GraficoDona> with SingleTickerProviderStat
       return Container(
         height: 220,
         alignment: Alignment.center,
-        decoration: DecoracionesAplicacion.tarjetaElevada(),
+        decoration: DecoracionesAplicacion.tarjetaElevada(context),
         child: Text(
           'Sin datos en este periodo',
-          style: EstilosTextoAplicacion.cuerpoSecundario,
+          style: EstilosTextoAplicacion.cuerpoSecundario(context),
         ),
       );
     }
 
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: DecoracionesAplicacion.tarjetaElevada(),
+      decoration: DecoracionesAplicacion.tarjetaElevada(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Horas por área', style: EstilosTextoAplicacion.tituloTarjeta),
+          Text('Horas por área', style: EstilosTextoAplicacion.tituloTarjeta(context)),
           const SizedBox(height: 4),
           Text(
             'Distribución de tiempo invertido',
-            style: EstilosTextoAplicacion.cuerpoSecundario,
+            style: EstilosTextoAplicacion.cuerpoSecundario(context),
           ),
           const SizedBox(height: 18),
           SizedBox(
@@ -114,9 +114,9 @@ class _GraficoDonaState extends State<GraficoDona> with SingleTickerProviderStat
                       children: [
                         Text(
                           '${totalHoras.toStringAsFixed(1)}h',
-                          style: EstilosTextoAplicacion.tituloPantalla.copyWith(fontSize: 28),
+                          style: EstilosTextoAplicacion.tituloPantalla(context).copyWith(fontSize: 28),
                         ),
-                        Text('TOTAL', style: EstilosTextoAplicacion.etiquetaSeccion),
+                        Text('TOTAL', style: EstilosTextoAplicacion.etiquetaSeccion(context)),
                       ],
                     ),
                   ],
@@ -138,10 +138,10 @@ class _GraficoDonaState extends State<GraficoDona> with SingleTickerProviderStat
                   const SizedBox(width: 10),
                   Icon(iconoDesdeClave(p.area.icono), size: 18, color: colorDesdeHex(p.area.colorHex)),
                   const SizedBox(width: 8),
-                  Expanded(child: Text(p.area.nombre, style: EstilosTextoAplicacion.cuerpo)),
+                  Expanded(child: Text(p.area.nombre, style: EstilosTextoAplicacion.cuerpo(context))),
                   Text(
                     '${p.porcentaje}%',
-                    style: EstilosTextoAplicacion.cuerpo.copyWith(fontWeight: FontWeight.w800),
+                    style: EstilosTextoAplicacion.cuerpo(context).copyWith(fontWeight: FontWeight.w800),
                   ),
                 ],
               ),
@@ -170,11 +170,11 @@ class ListaResumenDona extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(18),
-      decoration: DecoracionesAplicacion.tarjetaElevada(),
+      decoration: DecoracionesAplicacion.tarjetaElevada(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Detalle por área', style: EstilosTextoAplicacion.tituloTarjeta),
+          Text('Detalle por área', style: EstilosTextoAplicacion.tituloTarjeta(context)),
           const SizedBox(height: 14),
           ...porciones.map((p) {
             final prom = divisorPromedioDiario > 0 ? p.horas / divisorPromedioDiario : 0.0;
@@ -195,10 +195,10 @@ class ListaResumenDona extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(p.area.nombre, style: EstilosTextoAplicacion.tituloTarjeta),
+                            Text(p.area.nombre, style: EstilosTextoAplicacion.tituloTarjeta(context)),
                             Text(
                               '${p.horas.toStringAsFixed(1)} h · prom ${prom.toStringAsFixed(1)} h/día',
-                              style: EstilosTextoAplicacion.cuerpoSecundario,
+                              style: EstilosTextoAplicacion.cuerpoSecundario(context),
                             ),
                           ],
                         ),
@@ -220,8 +220,8 @@ class ListaResumenDona extends StatelessWidget {
                       minHeight: 8,
                       color: p.porcentaje > 0
                           ? ColoresAplicacion.azulPrincipal
-                          : ColoresAplicacion.grisClaro,
-                      backgroundColor: ColoresAplicacion.grisClaro,
+                          : context.superficieContenedor,
+                      backgroundColor: context.superficieContenedor,
                     ),
                   ),
                 ],

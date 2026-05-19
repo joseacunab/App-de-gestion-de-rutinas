@@ -85,11 +85,11 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColoresAplicacion.grisClaro,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        foregroundColor: ColoresAplicacion.grisOscuro,
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
           onPressed: () => Navigator.of(context).pop(),
@@ -106,17 +106,17 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                 children: [
                   Text(
                     'Crear cuenta',
-                    style: EstilosTextoAplicacion.tituloPantalla.copyWith(fontSize: 28),
+                    style: EstilosTextoAplicacion.tituloPantalla(context).copyWith(fontSize: 28),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Completa tus datos para empezar',
-                    style: EstilosTextoAplicacion.cuerpoSecundario,
+                    style: EstilosTextoAplicacion.cuerpoSecundario(context),
                   ),
                   const SizedBox(height: 28),
                   Container(
                     padding: const EdgeInsets.all(22),
-                    decoration: DecoracionesAplicacion.tarjetaElevada(),
+                    decoration: DecoracionesAplicacion.tarjetaElevada(context),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -169,13 +169,13 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                     children: [
                       Text(
                         '¿Ya tienes cuenta? ',
-                        style: EstilosTextoAplicacion.cuerpoSecundario,
+                        style: EstilosTextoAplicacion.cuerpoSecundario(context),
                       ),
                       GestureDetector(
                         onTap: () => Navigator.of(context).pop(),
                         child: Text(
                           'Iniciar sesión',
-                          style: EstilosTextoAplicacion.cuerpo.copyWith(
+                          style: EstilosTextoAplicacion.cuerpo(context).copyWith(
                             color: ColoresAplicacion.azulPrincipal,
                             fontWeight: FontWeight.w800,
                           ),

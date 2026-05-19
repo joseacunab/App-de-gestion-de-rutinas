@@ -12,6 +12,7 @@ import '../controladores/controlador_usuario.dart';
 import '../modelos/modelo_actividad.dart';
 import '../modelos/modelo_area.dart';
 import '../temas/colores_aplicacion.dart';
+import '../temas/estilos_texto_aplicacion.dart';
 import '../utilidades/utilidad_consultas_actividad.dart' as consultas;
 import '../utilidades/utilidad_fecha.dart';
 import 'pantalla_detalle_area.dart';
@@ -115,22 +116,22 @@ class PantallaAreas extends StatelessWidget {
         ),
         //Aca muestro un mensaje si no hay datos
         if (areasVisibles.isEmpty)
-          const SliverFillRemaining(
+          SliverFillRemaining(
             hasScrollBody: false,
             child: Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.category_outlined, size: 48, color: Colors.grey),
-                  SizedBox(height: 12),
+                  Icon(Icons.category_outlined, size: 48, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  const SizedBox(height: 12),
                   Text(
                     'Sin áreas en este período',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    style: EstilosTextoAplicacion.tituloTarjeta(context),
                   ),
-                  SizedBox(height: 6),
+                  const SizedBox(height: 6),
                   Text(
                     'Creá una nueva área con el botón +',
-                    style: TextStyle(fontSize: 13, color: Colors.grey),
+                    style: EstilosTextoAplicacion.cuerpoSecundario(context),
                   ),
                 ],
               ),

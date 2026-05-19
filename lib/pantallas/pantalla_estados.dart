@@ -112,22 +112,22 @@ class PantallaEstados extends StatelessWidget {
         ),
         //Aca muestro un mensaje si no hay datos
         if (sinDatosEnPeriodo)
-          const SliverFillRemaining(
+          SliverFillRemaining(
             hasScrollBody: false,
             child: Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.bar_chart_rounded, size: 48, color: Colors.grey),
-                  SizedBox(height: 12),
+                  Icon(Icons.bar_chart_rounded, size: 48, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  const SizedBox(height: 12),
                   Text(
                     'Sin actividad completada',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    style: EstilosTextoAplicacion.tituloTarjeta(context),
                   ),
-                  SizedBox(height: 6),
+                  const SizedBox(height: 6),
                   Text(
                     'Completá una tarea para ver tus estadísticas',
-                    style: TextStyle(fontSize: 13, color: Colors.grey),
+                    style: EstilosTextoAplicacion.cuerpoSecundario(context),
                   ),
                 ],
               ),
@@ -211,7 +211,7 @@ class _TarjetaMiniEstadistica extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: DecoracionesAplicacion.tarjetaElevada(),
+      decoration: DecoracionesAplicacion.tarjetaElevada(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -223,8 +223,8 @@ class _TarjetaMiniEstadistica extends StatelessWidget {
           const SizedBox(height: 10),
           Text(valor,
               style:
-                  EstilosTextoAplicacion.tituloPantalla.copyWith(fontSize: 22)),
-          Text(etiqueta, style: EstilosTextoAplicacion.cuerpoSecundario),
+                  EstilosTextoAplicacion.tituloPantalla(context).copyWith(fontSize: 22)),
+          Text(etiqueta, style: EstilosTextoAplicacion.cuerpoSecundario(context)),
         ],
       ),
     );

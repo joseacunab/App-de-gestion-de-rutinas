@@ -90,7 +90,7 @@ class _ModalNuevaAreaState extends State<ModalNuevaArea> {
             alCambiar: (_) => setState(() {}),
           ),
           const SizedBox(height: 16),
-          Text('COLOR', style: EstilosTextoAplicacion.etiquetaSeccion),
+          Text('COLOR', style: EstilosTextoAplicacion.etiquetaSeccion(context)),
           const SizedBox(height: 10),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -129,7 +129,7 @@ class _ModalNuevaAreaState extends State<ModalNuevaArea> {
             ),
           ),
           const SizedBox(height: 16),
-          Text('ICONO', style: EstilosTextoAplicacion.etiquetaSeccion),
+          Text('ICONO', style: EstilosTextoAplicacion.etiquetaSeccion(context)),
           const SizedBox(height: 10),
           GridView.builder(
             shrinkWrap: true,
@@ -148,13 +148,15 @@ class _ModalNuevaAreaState extends State<ModalNuevaArea> {
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   decoration: BoxDecoration(
-                    color: sel ? ColoresAplicacion.azulClaro : ColoresAplicacion.grisClaro,
+                    color: sel
+                        ? ColoresAplicacion.azulPrincipal.withValues(alpha: 0.18)
+                        : context.superficieSutil,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     iconoDesdeClave(clave),
                     size: 20,
-                    color: sel ? ColoresAplicacion.azulPrincipal : ColoresAplicacion.grisOscuro,
+                    color: sel ? ColoresAplicacion.azulPrincipal : context.esquema.onSurfaceVariant,
                   ),
                 ),
               );
@@ -214,7 +216,7 @@ class _VistaPreviaArea extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: ColoresAplicacion.azulClaro.withValues(alpha: 0.55),
+        color: ColoresAplicacion.azulPrincipal.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(DecoracionesAplicacion.radioTarjeta),
       ),
       child: Row(
@@ -229,8 +231,8 @@ class _VistaPreviaArea extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(nombre, style: EstilosTextoAplicacion.tituloTarjeta),
-                Text(descripcion, style: EstilosTextoAplicacion.cuerpoSecundario),
+                Text(nombre, style: EstilosTextoAplicacion.tituloTarjeta(context)),
+                Text(descripcion, style: EstilosTextoAplicacion.cuerpoSecundario(context)),
               ],
             ),
           ),

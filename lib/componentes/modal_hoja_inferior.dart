@@ -52,7 +52,7 @@ class ModalHojaContenedor extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(16, 0, 16, 20),
       padding: const EdgeInsets.fromLTRB(20, 16, 12, 20),
       decoration: BoxDecoration(
-        color: ColoresAplicacion.blanco,
+        color: context.superficie,
         borderRadius: BorderRadius.circular(DecoracionesAplicacion.radioModal),
         boxShadow: [
           BoxShadow(
@@ -75,9 +75,9 @@ class ModalHojaContenedor extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(titulo, style: EstilosTextoAplicacion.tituloPantalla.copyWith(fontSize: 22)),
+                        Text(titulo, style: EstilosTextoAplicacion.tituloPantalla(context).copyWith(fontSize: 22)),
                         const SizedBox(height: 6),
-                        Text(subtitulo, style: EstilosTextoAplicacion.cuerpoSecundario),
+                        Text(subtitulo, style: EstilosTextoAplicacion.cuerpoSecundario(context)),
                       ],
                     ),
                   ),

@@ -84,7 +84,7 @@ class _PantallaInicioSesionState extends State<PantallaInicioSesion> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColoresAplicacion.grisClaro,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -98,25 +98,25 @@ class _PantallaInicioSesionState extends State<PantallaInicioSesion> {
                   Text(
                     'Día a Día',
                     textAlign: TextAlign.center,
-                    style: EstilosTextoAplicacion.tituloPantalla
+                    style: EstilosTextoAplicacion.tituloPantalla(context)
                         .copyWith(fontSize: 32),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Organiza tu día con claridad',
                     textAlign: TextAlign.center,
-                    style: EstilosTextoAplicacion.cuerpoSecundario,
+                    style: EstilosTextoAplicacion.cuerpoSecundario(context),
                   ),
                   const SizedBox(height: 36),
                   Container(
                     padding: const EdgeInsets.all(22),
-                    decoration: DecoracionesAplicacion.tarjetaElevada(),
+                    decoration: DecoracionesAplicacion.tarjetaElevada(context),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
                           'Iniciar sesión',
-                          style: EstilosTextoAplicacion.tituloTarjeta
+                          style: EstilosTextoAplicacion.tituloTarjeta(context)
                               .copyWith(fontSize: 20),
                         ),
                         const SizedBox(height: 22),
@@ -153,14 +153,14 @@ class _PantallaInicioSesionState extends State<PantallaInicioSesion> {
                     children: [
                       Text(
                         '¿No tienes cuenta? ',
-                        style: EstilosTextoAplicacion.cuerpoSecundario,
+                        style: EstilosTextoAplicacion.cuerpoSecundario(context),
                       ),
                       GestureDetector(
                         onTap: () =>
                             Navigator.of(context).pushNamed('/registro'),
                         child: Text(
                           'Crear usuario',
-                          style: EstilosTextoAplicacion.cuerpo.copyWith(
+                          style: EstilosTextoAplicacion.cuerpo(context).copyWith(
                             color: ColoresAplicacion.azulPrincipal,
                             fontWeight: FontWeight.w800,
                           ),

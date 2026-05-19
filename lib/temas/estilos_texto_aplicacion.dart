@@ -1,43 +1,42 @@
 import 'package:flutter/material.dart';
-import 'colores_aplicacion.dart';
 
-/// Estilos tipográficos centralizados (claros).
+/// Estilos tipográficos centralizados, adaptados al tema activo.
 abstract final class EstilosTextoAplicacion {
-  static const TextStyle etiquetaSeccion = TextStyle(
-    fontSize: 11,
-    fontWeight: FontWeight.w600,
-    letterSpacing: 0.8,
-    color: ColoresAplicacion.grisMedio,
-  );
+  static TextStyle etiquetaSeccion(BuildContext context) => TextStyle(
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.8,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      );
 
-  static const TextStyle tituloPantalla = TextStyle(
-    fontSize: 28,
-    fontWeight: FontWeight.w800,
-    height: 1.1,
-    color: ColoresAplicacion.grisOscuro,
-  );
+  static TextStyle tituloPantalla(BuildContext context) => TextStyle(
+        fontSize: 28,
+        fontWeight: FontWeight.w800,
+        height: 1.1,
+        color: Theme.of(context).colorScheme.onSurface,
+      );
 
-  static const TextStyle subtituloPantalla = TextStyle(
-    fontSize: 13,
-    fontWeight: FontWeight.w500,
-    color: ColoresAplicacion.grisMedio,
-  );
+  static TextStyle subtituloPantalla(BuildContext context) => TextStyle(
+        fontSize: 13,
+        fontWeight: FontWeight.w500,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      );
 
-  static const TextStyle tituloTarjeta = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w700,
-    color: ColoresAplicacion.grisOscuro,
-  );
+  static TextStyle tituloTarjeta(BuildContext context) => TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w700,
+        color: Theme.of(context).colorScheme.onSurface,
+      );
 
-  static const TextStyle cuerpo = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-    color: ColoresAplicacion.grisOscuro,
-  );
+  static TextStyle cuerpo(BuildContext context) => TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+        color: Theme.of(context).colorScheme.onSurface,
+      );
 
-  static const TextStyle cuerpoSecundario = TextStyle(
-    fontSize: 13,
-    fontWeight: FontWeight.w500,
-    color: ColoresAplicacion.grisMedio,
-  );
+  static TextStyle cuerpoSecundario(BuildContext context) => TextStyle(
+        fontSize: 13,
+        fontWeight: FontWeight.w500,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      );
 }

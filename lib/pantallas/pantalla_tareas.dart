@@ -10,6 +10,7 @@ import '../controladores/controlador_seleccion_temporal.dart';
 import '../controladores/controlador_usuario.dart';
 import '../modelos/modelo_actividad.dart';
 import '../temas/colores_aplicacion.dart';
+import '../temas/estilos_texto_aplicacion.dart';
 import '../utilidades/utilidad_consultas_actividad.dart' as consultas;
 import '../utilidades/utilidad_fecha.dart';
 
@@ -95,22 +96,22 @@ class PantallaTareas extends StatelessWidget {
         ),
         //Aca agrego un mensaje de que no hay tareas si la lista esta vacia
         if (lista.isEmpty)
-          const SliverFillRemaining(
+          SliverFillRemaining(
             hasScrollBody: false,
             child: Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.task_alt_rounded, size: 48, color: Colors.grey),
-                  SizedBox(height: 12),
+                  Icon(Icons.task_alt_rounded, size: 48, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  const SizedBox(height: 12),
                   Text(
                     'Sin tareas en este período',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    style: EstilosTextoAplicacion.tituloTarjeta(context),
                   ),
-                  SizedBox(height: 6),
+                  const SizedBox(height: 6),
                   Text(
                     'Agregá una nueva tarea con el botón +',
-                    style: TextStyle(fontSize: 13, color: Colors.grey),
+                    style: EstilosTextoAplicacion.cuerpoSecundario(context),
                   ),
                 ],
               ),

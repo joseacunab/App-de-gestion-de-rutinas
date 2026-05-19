@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../temas/colores_aplicacion.dart';
 import '../temas/estilos_texto_aplicacion.dart';
 
 /// Variante de jerarquía del encabezado (inicio vs. pantallas con retroceso).
@@ -32,15 +31,15 @@ class BarraAplicacionPersonalizada extends StatelessWidget implements PreferredS
   Widget build(BuildContext context) {
     final lineas = estilo == EstiloEncabezadoBarra.saludoArriba
         ? <Widget>[
-            if (subtitulo != null) Text(subtitulo!, style: EstilosTextoAplicacion.subtituloPantalla),
+            if (subtitulo != null) Text(subtitulo!, style: EstilosTextoAplicacion.subtituloPantalla(context)),
             if (subtitulo != null) const SizedBox(height: 2),
-            Text(titulo, style: EstilosTextoAplicacion.tituloPantalla),
+            Text(titulo, style: EstilosTextoAplicacion.tituloPantalla(context)),
           ]
         : <Widget>[
-            Text(titulo, style: EstilosTextoAplicacion.tituloPantalla),
+            Text(titulo, style: EstilosTextoAplicacion.tituloPantalla(context)),
             if (subtitulo != null) ...[
               const SizedBox(height: 2),
-              Text(subtitulo!, style: EstilosTextoAplicacion.subtituloPantalla),
+              Text(subtitulo!, style: EstilosTextoAplicacion.subtituloPantalla(context)),
             ],
           ];
 
@@ -54,7 +53,7 @@ class BarraAplicacionPersonalizada extends StatelessWidget implements PreferredS
               IconButton(
                 onPressed: alRetroceder,
                 icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
-                color: ColoresAplicacion.grisOscuro,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             Expanded(
               child: Column(

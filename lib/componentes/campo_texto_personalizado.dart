@@ -27,7 +27,7 @@ class CampoTextoPersonalizado extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(etiqueta.toUpperCase(), style: EstilosTextoAplicacion.etiquetaSeccion),
+        Text(etiqueta.toUpperCase(), style: EstilosTextoAplicacion.etiquetaSeccion(context)),
         const SizedBox(height: 8),
         TextField(
           controller: controlador,
@@ -37,7 +37,7 @@ class CampoTextoPersonalizado extends StatelessWidget {
           onChanged: alCambiar,
           decoration: InputDecoration(
             hintText: placeholder,
-            hintStyle: EstilosTextoAplicacion.cuerpoSecundario,
+            hintStyle: EstilosTextoAplicacion.cuerpoSecundario(context),
           ),
         ),
       ],

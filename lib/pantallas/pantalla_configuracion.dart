@@ -41,12 +41,12 @@ class PantallaConfiguracion extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.all(16),
-                decoration: DecoracionesAplicacion.tarjetaElevada(),
+                decoration: DecoracionesAplicacion.tarjetaElevada(context),
                 child: Row(
                   children: [
                     CircleAvatar(
                       radius: 28,
-                      backgroundColor: ColoresAplicacion.azulClaro,
+                      backgroundColor: ColoresAplicacion.azulPrincipal.withValues(alpha: 0.15),
                       child: const Icon(Icons.person_rounded, color: ColoresAplicacion.azulPrincipal, size: 30),
                     ),
                     const SizedBox(width: 14),
@@ -54,10 +54,10 @@ class PantallaConfiguracion extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(nombreMostrar, style: EstilosTextoAplicacion.tituloTarjeta),
+                          Text(nombreMostrar, style: EstilosTextoAplicacion.tituloTarjeta(context)),
                           Text(
                             subtituloPerfil,
-                            style: EstilosTextoAplicacion.cuerpoSecundario,
+                            style: EstilosTextoAplicacion.cuerpoSecundario(context),
                           ),
                         ],
                       ),
@@ -82,7 +82,7 @@ class PantallaConfiguracion extends StatelessWidget {
               ),
               const SizedBox(height: 18),
               Material(
-                color: ColoresAplicacion.blanco,
+                color: context.superficie,
                 borderRadius: BorderRadius.circular(DecoracionesAplicacion.radioTarjeta),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(DecoracionesAplicacion.radioTarjeta),
@@ -100,7 +100,7 @@ class PantallaConfiguracion extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(DecoracionesAplicacion.radioTarjeta),
-                      border: Border.all(color: ColoresAplicacion.bordeSutil),
+                      border: Border.all(color: context.borde),
                     ),
                     child: const Text(
                       'Cerrar sesión',
@@ -138,15 +138,15 @@ class _FilaInterruptor extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: DecoracionesAplicacion.tarjetaElevada(),
+      decoration: DecoracionesAplicacion.tarjetaElevada(context),
       child: Row(
         children: [
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(titulo, style: EstilosTextoAplicacion.tituloTarjeta),
-                Text(subtitulo, style: EstilosTextoAplicacion.cuerpoSecundario),
+                Text(titulo, style: EstilosTextoAplicacion.tituloTarjeta(context)),
+                Text(subtitulo, style: EstilosTextoAplicacion.cuerpoSecundario(context)),
               ],
             ),
           ),

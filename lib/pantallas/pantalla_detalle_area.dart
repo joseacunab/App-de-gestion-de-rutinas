@@ -63,8 +63,8 @@ class PantallaDetalleArea extends StatelessWidget {
                     if (r == null || !context.mounted) return;
                     await controladorAreas.actualizarArea(r.area);
                   },
-                  icon: const Icon(Icons.edit_rounded,
-                      color: ColoresAplicacion.grisOscuro),
+                  icon: Icon(Icons.edit_rounded,
+                      color: Theme.of(context).colorScheme.onSurface),
                 ),
                 IconButton(
                   onPressed: () async {
@@ -92,7 +92,7 @@ class PantallaDetalleArea extends StatelessWidget {
                 Row(
                   children: [
                     Text('ACTIVIDADES',
-                        style: EstilosTextoAplicacion.etiquetaSeccion),
+                        style: EstilosTextoAplicacion.etiquetaSeccion(context)),
                     const Spacer(),
                     TextButton.icon(
                       style: TextButton.styleFrom(
@@ -127,13 +127,13 @@ class PantallaDetalleArea extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(18),
                     decoration: BoxDecoration(
-                      color: ColoresAplicacion.blanco,
+                      color: context.superficie,
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: ColoresAplicacion.bordeSutil),
+                      border: Border.all(color: context.borde),
                     ),
                     child: Text(
                       'Agregá una nueva actividad.',
-                      style: EstilosTextoAplicacion.cuerpoSecundario,
+                      style: EstilosTextoAplicacion.cuerpoSecundario(context),
                     ),
                   ),
               ],
