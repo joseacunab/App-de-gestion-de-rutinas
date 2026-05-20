@@ -32,24 +32,70 @@ class _ModalNuevaAreaState extends State<ModalNuevaArea> {
   late Color _colorSeleccionado;
   late String _iconoSeleccionado;
 
-  static const List<Color> _paleta = [
-    Color(0xFF3B82F6),
-    Color(0xFF4F46E5),
-    Color(0xFF22C55E),
-    Color(0xFF06B6D4),
-    Color(0xFFF97316),
-    ColoresAplicacion.peligro,
-    Color(0xFF8B5CF6),
-    Color(0xFFEC4899),
-  ];
+  static const int _columnasColores = 10;
+  static const int _columnasIconos = 8;
+  static const double _alturaMaximaGridColores = 172;
+  static const double _alturaMaximaGridIconos = 140;
 
+  static const List<Color> _paleta = [
+    // 🔵 AZULES (1 base + variaciones reales distintas)
+    Color(0xFF3B82F6),
+    Color(0xFF1E40AF),
+    Color(0xFF60A5FA),
+    Color(0xFF0EA5E9),
+
+    // 🟣 VIOLETAS
+    Color(0xFF4F46E5),
+    Color(0xFF8B5CF6),
+    Color(0xFFA78BFA),
+    Color(0xFF7C3AED),
+    Color(0xFF581C87),
+
+    // 🟢 VERDES
+    Color(0xFF22C55E),
+    Color(0xFF16A34A),
+    Color(0xFF0F766E),
+    Color(0xFF166534),
+    Color(0xFF84CC16),
+    Color(0xFF65A30D),
+
+    // 🔴 ROJOS / ROSAS
+    ColoresAplicacion.peligro,
+    Color(0xFFBE123C),
+    Color(0xFFFB7185),
+    Color(0xFF9F1239),
+    Color(0xFFEC4899),
+
+    // 🟡 AMARILLOS / NARANJAS
+    Color(0xFFEAB308),
+    Color(0xFFFBBF24),
+    Color(0xFFF97316),
+    Color(0xFFEA580C),
+    Color(0xFFFB923C),
+
+    // 🔵 CYAN / TEAL
+    Color(0xFF06B6D4),
+    Color(0xFF14B8A6),
+    Color(0xFF2DD4BF),
+    Color(0xFF0369A1),
+
+    // ⚫ NEUTROS
+    Color(0xFF1F2937),
+    Color(0xFF334155),
+    Color(0xFF475569),
+    Color(0xFF64748B),
+    Color(0xFF94A3B8),
+    Color(0xFFCBD5E1),
+    Color(0xFF0F172A),
+  ];
   @override
   void initState() {
     super.initState();
     final a = widget.areaExistente;
     _nombre = TextEditingController(text: a?.nombre ?? '');
     _descripcion = TextEditingController(text: a?.descripcion ?? '');
-    _colorSeleccionado = a != null ? colorDesdeHex(a.colorHex) : const Color(0xFF3B82F6);
+    _colorSeleccionado =
+        a != null ? colorDesdeHex(a.colorHex) : const Color(0xFF3B82F6);
     _iconoSeleccionado = a?.icono ?? 'traduccion';
   }
 
@@ -71,7 +117,9 @@ class _ModalNuevaAreaState extends State<ModalNuevaArea> {
         children: [
           _VistaPreviaArea(
             nombre: _nombre.text.isEmpty ? 'Nombre del área' : _nombre.text,
-            descripcion: _descripcion.text.isEmpty ? 'Descripción opcional' : _descripcion.text,
+            descripcion: _descripcion.text.isEmpty
+                ? 'Descripción opcional'
+                : _descripcion.text,
             color: _colorSeleccionado,
             claveIcono: _iconoSeleccionado,
           ),
@@ -92,24 +140,35 @@ class _ModalNuevaAreaState extends State<ModalNuevaArea> {
           const SizedBox(height: 16),
           Text('COLOR', style: EstilosTextoAplicacion.etiquetaSeccion(context)),
           const SizedBox(height: 10),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: _paleta.map((c) {
+          SizedBox(
+            height: _alturaMaximaGridColores,
+            child: GridView.builder(
+              padding: EdgeInsets.zero,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: _columnasColores,
+                mainAxisSpacing: 6,
+                crossAxisSpacing: 6,
+                childAspectRatio: 1,
+              ),
+              itemCount: _paleta.length,
+              itemBuilder: (context, i) {
+                final c = _paleta[i];
                 final sel = c == _colorSeleccionado;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: GestureDetector(
-                    onTap: () => setState(() => _colorSeleccionado = c),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
+                return GestureDetector(
+                  onTap: () => setState(() => _colorSeleccionado = c),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    alignment: Alignment.center,
+                    child: Container(
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: c,
                         border: Border.all(
-                          color: sel ? ColoresAplicacion.blanco : Colors.transparent,
+                          color: sel
+                              ? ColoresAplicacion.blanco
+                              : Colors.transparent,
                           width: 3,
                         ),
                         boxShadow: sel
@@ -125,47 +184,58 @@ class _ModalNuevaAreaState extends State<ModalNuevaArea> {
                     ),
                   ),
                 );
-              }).toList(),
+              },
             ),
           ),
           const SizedBox(height: 16),
           Text('ICONO', style: EstilosTextoAplicacion.etiquetaSeccion(context)),
           const SizedBox(height: 10),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: clavesIconosArea.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 8,
-              mainAxisSpacing: 8,
-              crossAxisSpacing: 8,
+          SizedBox(
+            height: _alturaMaximaGridIconos,
+            child: GridView.builder(
+              padding: EdgeInsets.zero,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: _columnasIconos,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                childAspectRatio: 1,
+              ),
+              itemCount: clavesIconosArea.length,
+              itemBuilder: (context, i) {
+                final clave = clavesIconosArea[i];
+                final sel = clave == _iconoSeleccionado;
+                return GestureDetector(
+                  onTap: () => setState(() => _iconoSeleccionado = clave),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: sel
+                          ? ColoresAplicacion.azulPrincipal
+                              .withValues(alpha: 0.18)
+                          : context.superficieSutil,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      iconoDesdeClave(clave),
+                      size: 20,
+                      color: sel
+                          ? ColoresAplicacion.azulPrincipal
+                          : context.esquema.onSurfaceVariant,
+                    ),
+                  ),
+                );
+              },
             ),
-            itemBuilder: (context, i) {
-              final clave = clavesIconosArea[i];
-              final sel = clave == _iconoSeleccionado;
-              return GestureDetector(
-                onTap: () => setState(() => _iconoSeleccionado = clave),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  decoration: BoxDecoration(
-                    color: sel
-                        ? ColoresAplicacion.azulPrincipal.withValues(alpha: 0.18)
-                        : context.superficieSutil,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    iconoDesdeClave(clave),
-                    size: 20,
-                    color: sel ? ColoresAplicacion.azulPrincipal : context.esquema.onSurfaceVariant,
-                  ),
-                ),
-              );
-            },
           ),
           const SizedBox(height: 20),
           Row(
             children: [
-              Expanded(child: BotonSecundario(etiqueta: 'Cancelar', alExpandirse: true, onPresionado: () => Navigator.pop(context))),
+              Expanded(
+                  child: BotonSecundario(
+                      etiqueta: 'Cancelar',
+                      alExpandirse: true,
+                      onPresionado: () => Navigator.pop(context))),
               const SizedBox(width: 12),
               Expanded(
                 child: BotonPrimario(
@@ -186,7 +256,8 @@ class _ModalNuevaAreaState extends State<ModalNuevaArea> {
                       creadoEn: prev?.creadoEn,
                       actualizadoEn: prev?.actualizadoEn,
                     );
-                    Navigator.pop(context, ResultadoModalArea(area: area, esEdicion: esEdicion));
+                    Navigator.pop(context,
+                        ResultadoModalArea(area: area, esEdicion: esEdicion));
                   },
                 ),
               ),
@@ -217,7 +288,8 @@ class _VistaPreviaArea extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: ColoresAplicacion.azulPrincipal.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(DecoracionesAplicacion.radioTarjeta),
+        borderRadius:
+            BorderRadius.circular(DecoracionesAplicacion.radioTarjeta),
       ),
       child: Row(
         children: [
@@ -231,8 +303,10 @@ class _VistaPreviaArea extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(nombre, style: EstilosTextoAplicacion.tituloTarjeta(context)),
-                Text(descripcion, style: EstilosTextoAplicacion.cuerpoSecundario(context)),
+                Text(nombre,
+                    style: EstilosTextoAplicacion.tituloTarjeta(context)),
+                Text(descripcion,
+                    style: EstilosTextoAplicacion.cuerpoSecundario(context)),
               ],
             ),
           ),
