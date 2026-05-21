@@ -34,7 +34,7 @@ class _ModalNuevaAreaState extends State<ModalNuevaArea> {
 
   static const int _columnasColores = 10;
   static const int _columnasIconos = 8;
-  static const double _alturaMaximaGridColores = 172;
+  static const double _alturaMaximaGridColores = 140;
   static const double _alturaMaximaGridIconos = 140;
 
   static const List<Color> _paleta = [
@@ -140,92 +140,115 @@ class _ModalNuevaAreaState extends State<ModalNuevaArea> {
           const SizedBox(height: 16),
           Text('COLOR', style: EstilosTextoAplicacion.etiquetaSeccion(context)),
           const SizedBox(height: 10),
-          SizedBox(
-            height: _alturaMaximaGridColores,
-            child: GridView.builder(
-              padding: EdgeInsets.zero,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: _columnasColores,
-                mainAxisSpacing: 6,
-                crossAxisSpacing: 6,
-                childAspectRatio: 1,
-              ),
-              itemCount: _paleta.length,
-              itemBuilder: (context, i) {
-                final c = _paleta[i];
-                final sel = c == _colorSeleccionado;
-                return GestureDetector(
-                  onTap: () => setState(() => _colorSeleccionado = c),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    alignment: Alignment.center,
-                    child: Container(
-                      width: 36,
-                      height: 36,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: c,
-                        border: Border.all(
-                          color: sel
-                              ? ColoresAplicacion.blanco
-                              : Colors.transparent,
-                          width: 3,
-                        ),
-                        boxShadow: sel
-                            ? [
-                                BoxShadow(
-                                  color: c.withValues(alpha: 0.55),
-                                  blurRadius: 12,
-                                  spreadRadius: 1,
-                                ),
-                              ]
-                            : null,
-                      ),
-                    ),
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF1F2937)
+                  : Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: _alturaMaximaGridColores,
+                child: GridView.builder(
+                  padding: EdgeInsets.zero,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: _columnasColores,
+                    mainAxisSpacing: 6,
+                    crossAxisSpacing: 6,
+                    childAspectRatio: 1,
                   ),
-                );
-              },
+                  itemCount: _paleta.length,
+                  itemBuilder: (context, i) {
+                    final c = _paleta[i];
+                    final sel = c == _colorSeleccionado;
+                    return GestureDetector(
+                      onTap: () => setState(() => _colorSeleccionado = c),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        alignment: Alignment.center,
+                        child: Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: c,
+                            border: Border.all(
+                              color: sel
+                                  ? ColoresAplicacion.blanco
+                                  : Colors.transparent,
+                              width: 3,
+                            ),
+                            boxShadow: sel
+                                ? [
+                                    BoxShadow(
+                                      color: c.withValues(alpha: 0.55),
+                                      blurRadius: 12,
+                                      spreadRadius: 1,
+                                    ),
+                                  ]
+                                : null,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 16),
           Text('ICONO', style: EstilosTextoAplicacion.etiquetaSeccion(context)),
           const SizedBox(height: 10),
-          SizedBox(
-            height: _alturaMaximaGridIconos,
-            child: GridView.builder(
-              padding: EdgeInsets.zero,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: _columnasIconos,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-                childAspectRatio: 1,
-              ),
-              itemCount: clavesIconosArea.length,
-              itemBuilder: (context, i) {
-                final clave = clavesIconosArea[i];
-                final sel = clave == _iconoSeleccionado;
-                return GestureDetector(
-                  onTap: () => setState(() => _iconoSeleccionado = clave),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: sel
-                          ? ColoresAplicacion.azulPrincipal
-                              .withValues(alpha: 0.18)
-                          : context.superficieSutil,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      iconoDesdeClave(clave),
-                      size: 20,
-                      color: sel
-                          ? ColoresAplicacion.azulPrincipal
-                          : context.esquema.onSurfaceVariant,
-                    ),
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF1F2937)
+                  : Colors.grey.shade200, // 👈 fondo gris claro
+              borderRadius:
+                  BorderRadius.circular(12), // opcional pero recomendado
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0), // opcional: aire interno
+              child: SizedBox(
+                height: _alturaMaximaGridIconos,
+                child: GridView.builder(
+                  padding: EdgeInsets.zero,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: _columnasIconos,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 1,
                   ),
-                );
-              },
+                  itemCount: clavesIconosArea.length,
+                  itemBuilder: (context, i) {
+                    final clave = clavesIconosArea[i];
+                    final sel = clave == _iconoSeleccionado;
+                    return GestureDetector(
+                      onTap: () => setState(() => _iconoSeleccionado = clave),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: sel
+                              ? ColoresAplicacion.azulPrincipal
+                                  .withValues(alpha: 0.18)
+                              : context.superficieSutil,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          iconoDesdeClave(clave),
+                          size: 20,
+                          color: sel
+                              ? ColoresAplicacion.azulPrincipal
+                              : context.esquema.onSurfaceVariant,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 20),
